@@ -1,0 +1,13 @@
+Port=19090
+
+[RdbConfig.redis]
+host="http://127.0.0.1"
+port=6379
+username=""
+password=""
+
+[RdbConfig.mongo]
+host="http://127.0.0.1"
+port=27017
+username=""
+password=""
