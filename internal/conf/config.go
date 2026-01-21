@@ -8,6 +8,18 @@ import (
 type Config struct {
 	Port      int64        `toml:"Port" json:"port"`            // 端口
 	RdbConfig *ds.DsConfig `toml:"RdbConfig" json:"rdb_config"` // 数据库配置
+	Jwt       *JwtOptions  `toml:"Jwt" json:"jwt"`              // JWT配置
+	Admin     *Admin       `toml:"Admin" json:"admin"`          // 管理员
+}
+
+type JwtOptions struct {
+	Secret string `toml:"Secret" json:"secret"` // JWT密钥
+	Expire int64  `toml:"Expire" json:"expire"` // JWT过期时间(小时)
+}
+
+type Admin struct {
+	Username string `toml:"Username" json:"username"`
+	Password string `toml:"Password" json:"password"`
 }
 
 // 加载配置文件

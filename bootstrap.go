@@ -55,11 +55,13 @@ func NewHousekeeper(ctx context.Context, config *conf.Config) *Housekeeper {
 
 	// 初始化服务层
 	NotesService := services.NewNotesService(ctx, NoteRepo)
+	UserService := services.NewUserService(ctx, config)
 
 	// 初始化handler层
 	NotesHandler := handler.NewNotesHandler(ctx, NotesService)
+	UserHandler := handler.NewUserHandler(ctx, UserService)
 
-	routers := router.PrepareRouter(NotesHandler)
+	routers := router.PrepareRouter(NotesHandler, UserHandler)
 
 	e := vortex.NewVortexEngine(ctx,
 		vortex.WithPort(int(config.Port)),
