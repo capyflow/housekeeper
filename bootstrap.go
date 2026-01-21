@@ -15,7 +15,7 @@ import (
 )
 
 func main() {
-	var confPath = flag.String("conf", "./conf/config.toml", "config file path")
+	var confPath = flag.String("c", "./conf/config.toml", "config file path")
 	flag.Parse()
 
 	ctx := context.Background()
@@ -61,7 +61,7 @@ func NewHousekeeper(ctx context.Context, config *conf.Config) *Housekeeper {
 	NotesHandler := handler.NewNotesHandler(ctx, NotesService)
 	UserHandler := handler.NewUserHandler(ctx, UserService)
 
-	routers := router.PrepareRouter(NotesHandler, UserHandler)
+	routers := router.PrepareRouter(NotesHandler, UserHandler, UserService)
 
 	e := vortex.NewVortexEngine(ctx,
 		vortex.WithPort(int(config.Port)),

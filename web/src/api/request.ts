@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 
 const instance: AxiosInstance = axios.create({
-  baseURL: '/api/v1',
+  baseURL: '/v1',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json'
@@ -25,7 +25,17 @@ instance.interceptors.request.use(
 // Response interceptor
 instance.interceptors.response.use(
   (response: AxiosResponse) => {
-    return response.data
+    const data = response.data
+    // 后端返回格式: {body: {...}, head: {ec, em, ...}, path: "..."}
+    if (data && typeof data === 'object' && 'body' in data) {
+      return data.body
+    }
+    // 兼容其他格式
+    if (data && typeof data === 'object' && 'data' in data) {
+      return data.data
+    }
+    // 否则直接返回整个响应数据
+    return data
   },
   (error) => {
     if (error.response?.status === 401) {

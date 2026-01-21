@@ -31,7 +31,7 @@ func NewNoteRepo(ctx context.Context, dsServer *ds.DatabaseServer) *NoteRepo {
 	if !ok {
 		panic("get redis failed")
 	}
-	mdb, ok := dsServer.GetMongo("note")
+	mdb, ok := dsServer.GetMongo("housekeeper")
 	if !ok {
 		panic("get mongo failed")
 	}

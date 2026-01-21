@@ -54,6 +54,7 @@
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
+import { userApi } from '@/api/user'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -72,25 +73,37 @@ const handleLogin = async () => {
   loading.value = true
 
   try {
-    // 模拟网络延迟
-    await new Promise(resolve => setTimeout(resolve, 800))
+    // 调用真实的登录API
+    const response = await userApi.login({
+      username: formData.username,
+      password: formData.password
+    })
 
-    // 验证用户名密码
-    if (formData.username === 'aaron' && formData.password === 'aaron@123') {
-      const mockToken = 'mock-jwt-token-' + Date.now()
-      userStore.setToken(mockToken)
-      userStore.setUser({
-        id: '1',
-        username: 'aaron',
-        nickname: 'Aaron'
-      })
+    console.log('登录响应:', response)
 
-      router.push('/')
-    } else {
-      error.value = '用户名或密码错误'
+    // 检查响应格式
+    if (!response || !response.token) {
+      console.error('响应格式错误:', response)
+      error.value = '登录响应格式错误'
+      return
     }
-  } catch (err) {
-    error.value = '登录失败，请稍后重试'
+
+    // 保存token
+    userStore.setToken(response.token)
+    userStore.setUser({
+      id: '1',
+      username: formData.username,
+      nickname: formData.username
+    })
+
+    console.log('Token已保存，准备跳转')
+
+    // 跳转到首页
+    await router.push('/')
+    console.log('跳转完成')
+  } catch (err: any) {
+    console.error('登录失败:', err)
+    error.value = err.response?.data?.msg || '登录失败，请检查用户名和密码'
   } finally {
     loading.value = false
   }

@@ -13,8 +13,9 @@ type Config struct {
 }
 
 type JwtOptions struct {
-	Secret string `toml:"Secret" json:"secret"` // JWT密钥
-	Expire int64  `toml:"Expire" json:"expire"` // JWT过期时间(小时)
+	Secret          string `toml:"Secret" json:"secret"`                     // JWT密钥
+	Expire          int64  `toml:"Expire" json:"expire"`                     // JWT过期时间(小时)
+	SkipExpireCheck bool   `toml:"SkipExpireCheck" json:"skip_expire_check"` // 是否跳过过期时间检查
 }
 
 type Admin struct {

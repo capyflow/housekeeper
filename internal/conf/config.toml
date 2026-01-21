@@ -3,13 +3,22 @@ JwtSecret="your-secret-key-change-this-in-production"
 JwtExpire=24
 
 [RdbConfig.redis]
-host="http://127.0.0.1"
-port=6379
-username=""
-password=""
+host="127.0.0.1"
+port=36379
+username="default"
+password="1433223qQ"
 
 [RdbConfig.mongo]
-host="http://127.0.0.1"
+host="127.0.0.1"
 port=27017
 username=""
 password=""
+
+
+[Jwt]
+Secret="123456"
+Expire=256000
+
+[Admin]
+Username="aaron"
+Password="aaron@519"
