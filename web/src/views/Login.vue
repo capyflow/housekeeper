@@ -295,4 +295,77 @@ const handleLogin = async () => {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .login-container::before,
+  .login-container::after {
+    display: none;
+  }
+
+  .theme-toggle-wrapper {
+    top: 16px;
+    right: 16px;
+  }
+
+  .theme-toggle {
+    width: 40px;
+    height: 40px;
+  }
+
+  .login-box {
+    max-width: 100%;
+    margin: 0 20px;
+    padding: 36px 28px;
+    border-radius: 16px;
+  }
+
+  .logo-wrapper {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 16px;
+  }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .login-title {
+    font-size: 26px;
+  }
+
+  .login-subtitle {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-box {
+    margin: 0 16px;
+    padding: 28px 20px;
+  }
+
+  .logo-wrapper {
+    width: 56px;
+    height: 56px;
+  }
+
+  .logo-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .login-title {
+    font-size: 24px;
+  }
+
+  .login-form {
+    gap: 20px;
+  }
+
+  .form-group {
+    gap: 8px;
+  }
+}
 </style>

@@ -971,4 +971,214 @@ onMounted(() => {
     grid-template-columns: 1fr;
   }
 }
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .shareboard-page {
+    gap: 20px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 0;
+  }
+
+  .header-left h2 {
+    font-size: 24px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+
+  .filters {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .filter-input {
+    max-width: 100%;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .header-right .btn {
+    width: auto;
+  }
+
+  .boards-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .board-card {
+    padding: 20px 16px;
+  }
+
+  .board-title {
+    font-size: 17px;
+  }
+
+  .icon-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .content-text {
+    font-size: 13px;
+  }
+
+  .board-meta {
+    gap: 6px;
+  }
+
+  .meta-item {
+    font-size: 12px;
+  }
+
+  .pagination {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .pagination .btn {
+    width: 100%;
+  }
+
+  .page-info {
+    order: -1;
+  }
+
+  /* 模态框适配 */
+  .modal {
+    width: 95%;
+    max-width: 95%;
+    padding: 20px;
+    max-height: calc(85vh - 20px);
+    margin-bottom: 20px;
+  }
+
+  .modal-header h3 {
+    font-size: 20px;
+  }
+
+  .modal-form {
+    gap: 18px;
+  }
+
+  .form-group label {
+    font-size: 13px;
+  }
+
+  .textarea {
+    min-height: 120px;
+  }
+
+  .modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .modal-actions .btn {
+    width: 100%;
+  }
+
+  .view-modal {
+    max-width: 95%;
+    margin-bottom: 20px;
+    max-height: calc(90vh - 20px);
+  }
+
+  .view-content {
+    gap: 20px;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .btn-copy {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .content-box {
+    padding: 16px;
+    font-size: 14px;
+    max-height: 300px;
+  }
+
+  .view-info {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-left h2 {
+    font-size: 20px;
+  }
+
+  .board-card {
+    padding: 16px 12px;
+    gap: 12px;
+  }
+
+  .board-header {
+    gap: 8px;
+  }
+
+  .board-title {
+    font-size: 16px;
+  }
+
+  .icon-btn {
+    width: 28px;
+    height: 28px;
+  }
+
+  .icon-btn .icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .board-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .board-time {
+    align-self: flex-end;
+  }
+
+  .modal {
+    padding: 16px;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    margin-bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  }
+
+  .modal-header h3 {
+    font-size: 18px;
+  }
+
+  .close-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .content-box {
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .view-modal {
+    margin-bottom: max(16px, env(safe-area-inset-bottom, 0px));
+    max-height: calc(85vh - max(16px, env(safe-area-inset-bottom, 0px)));
+  }
+}
 </style>

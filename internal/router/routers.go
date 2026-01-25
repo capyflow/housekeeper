@@ -2,19 +2,38 @@ package router
 
 import (
 	"net/http"
+	"path/filepath"
 
 	"github.com/capyflow/housekeeper/internal/handler"
 	vhttp "github.com/capyflow/vortexv3/server/http"
 )
 
 func PrepareRouter(notesHandler *handler.NotesHandler,
-	userHandler *handler.UserHandler) *vhttp.VortexHttpRouterGroup {
+	userHandler *handler.UserHandler, staticPath string) *vhttp.VortexHttpRouterGroup {
+	rootGroup := vhttp.NewRootGroup("")
 	// API路由组（/v1前缀）
-	apiGroup := vhttp.NewRootGroup("/v1")
+	apiGroup := rootGroup.AddGroup("/v1")
 	prepareNotesRouter(apiGroup, notesHandler)
 	prepareUserRouter(apiGroup, userHandler)
+	prepareStaticRouter(rootGroup, staticPath)
+	return rootGroup
+}
 
-	return apiGroup
+func prepareStaticRouter(rootGroup *vhttp.VortexHttpRouterGroup, staticPath string) {
+	// 静态资源路由 - 处理 /assets/* 下的 JS/CSS 文件
+	rootGroup.AddStaticRouter("/assets/*filepath", func(ctx *vhttp.Context) error {
+		filePath := ctx.GinContext().Param("filepath")
+		fullPath := filepath.Join(staticPath, "assets", filePath)
+		ctx.GinContext().File(fullPath)
+		return nil
+	})
+
+	// 根路径和主页面路由 - 返回 index.html
+	rootGroup.AddStaticRouter("/", func(ctx *vhttp.Context) error {
+		indexPath := filepath.Join(staticPath, "index.html")
+		ctx.GinContext().File(indexPath)
+		return nil
+	})
 }
 
 func prepareNotesRouter(rootGroup *vhttp.VortexHttpRouterGroup,

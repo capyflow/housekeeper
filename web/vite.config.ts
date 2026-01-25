@@ -10,7 +10,7 @@ export default defineConfig({
     }
   },
   build: {
-    outDir: '../web_dist',  // 构建输出到项目根目录的web_dist文件夹
+    outDir: 'dist',  // 构建输出到web/dist目录
     emptyOutDir: true,
     assetsDir: 'assets',
     rollupOptions: {

@@ -1,17 +1,25 @@
 <template>
   <div class="layout">
-    <aside class="sidebar">
+    <!-- 移动端遮罩层 -->
+    <div v-if="sidebarOpen" class="sidebar-overlay" @click="sidebarOpen = false"></div>
+
+    <aside class="sidebar" :class="{ 'sidebar-open': sidebarOpen }">
       <div class="sidebar-header">
         <h2 class="logo">Housekeeper</h2>
+        <button class="sidebar-close" @click="sidebarOpen = false">
+          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
       </div>
       <nav class="sidebar-nav">
-        <router-link to="/" class="nav-item" exact-active-class="active">
+        <router-link to="/" class="nav-item" exact-active-class="active" @click="closeSidebarOnMobile">
           <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
           </svg>
           <span>仪表盘</span>
         </router-link>
-        <router-link to="/shareboard" class="nav-item" exact-active-class="active">
+        <router-link to="/shareboard" class="nav-item" exact-active-class="active" @click="closeSidebarOnMobile">
           <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
           </svg>
@@ -23,6 +31,11 @@
     <div class="main-content">
       <header class="header">
         <div class="header-left">
+          <button class="menu-toggle" @click="sidebarOpen = !sidebarOpen">
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
           <h1 class="page-title">{{ currentPageTitle }}</h1>
         </div>
         <div class="header-right">
@@ -54,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { useThemeStore } from '@/stores/theme'
@@ -64,6 +77,8 @@ const route = useRoute()
 const userStore = useUserStore()
 const themeStore = useThemeStore()
 
+const sidebarOpen = ref(false)
+
 const currentPageTitle = computed(() => {
   const titleMap: Record<string, string> = {
     Dashboard: '仪表盘',
@@ -71,6 +86,13 @@ const currentPageTitle = computed(() => {
   }
   return titleMap[route.name as string] || '首页'
 })
+
+const closeSidebarOnMobile = () => {
+  // 在移动端点击导航项后关闭侧边栏
+  if (window.innerWidth <= 768) {
+    sidebarOpen.value = false
+  }
+}
 
 const handleLogout = () => {
   userStore.logout()
@@ -108,6 +130,10 @@ const handleLogout = () => {
 .sidebar-header {
   padding: 32px 24px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 88px;
 }
 
 .logo {
@@ -115,6 +141,8 @@ const handleLogout = () => {
   font-weight: 700;
   color: white;
   letter-spacing: -0.5px;
+  line-height: 1;
+  flex: 1;
 }
 
 .sidebar-nav {
@@ -187,17 +215,27 @@ const handleLogout = () => {
   z-index: 10;
 }
 
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex: 1;
+}
+
 .page-title {
   font-size: 24px;
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: -0.5px;
+  line-height: 72px;
+  margin: 0;
 }
 
 .header-right {
   display: flex;
   align-items: center;
   gap: 16px;
+  flex-shrink: 0;
 }
 
 .theme-toggle {
@@ -272,5 +310,236 @@ const handleLogout = () => {
   padding: 32px 36px;
   overflow-y: auto;
   background-color: var(--bg-secondary);
+}
+
+/* 移动端样式 */
+.sidebar-overlay {
+  display: none;
+}
+
+.menu-toggle {
+  display: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background-color: transparent;
+  color: var(--text-primary);
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+}
+
+.menu-toggle:hover {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+}
+
+.menu-toggle .icon {
+  width: 24px;
+  height: 24px;
+}
+
+.sidebar-close {
+  display: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-color: transparent;
+  color: white;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.sidebar-close:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-close .icon {
+  width: 20px;
+  height: 20px;
+}
+
+@media (max-width: 768px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+  }
+
+  .sidebar-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .sidebar-header {
+    padding: 20px 20px;
+    min-height: 60px;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-size: 22px;
+    flex: 0;
+  }
+
+  .sidebar-close {
+    display: flex;
+    flex-shrink: 0;
+  }
+
+  .menu-toggle {
+    display: flex;
+    margin-right: 12px;
+  }
+
+  .header {
+    padding: 0 16px;
+    height: 60px;
+  }
+
+  .header-left {
+    gap: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .page-title {
+    font-size: 18px;
+    line-height: 60px;
+    margin: 0;
+  }
+
+  .header-right {
+    gap: 8px;
+  }
+
+  .theme-toggle {
+    width: 36px;
+    height: 36px;
+  }
+
+  .username {
+    display: none;
+  }
+
+  .btn-logout {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .btn-logout span {
+    display: none;
+  }
+
+  .btn-logout .icon {
+    margin: 0;
+  }
+
+  .content {
+    padding: 20px 16px;
+  }
+
+  .main-content {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    width: 260px;
+  }
+
+  .sidebar-header {
+    padding: 16px;
+    min-height: 56px;
+  }
+
+  .logo {
+    font-size: 20px;
+  }
+
+  .menu-toggle {
+    width: 36px;
+    height: 36px;
+    margin-right: 8px;
+  }
+
+  .menu-toggle .icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  .header {
+    height: 56px;
+  }
+
+  .page-title {
+    font-size: 16px;
+    line-height: 56px;
+  }
+
+  .theme-toggle {
+    width: 32px;
+    height: 32px;
+  }
+
+  .theme-toggle .icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .btn-logout {
+    padding: 6px 10px;
+  }
+
+  .btn-logout .icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .sidebar-close {
+    width: 28px;
+    height: 28px;
+  }
+
+  .sidebar-close .icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .content {
+    padding: 16px 12px;
+  }
 }
 </style>

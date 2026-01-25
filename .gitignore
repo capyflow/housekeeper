@@ -1,2 +1,6 @@
 .idea/
 deploy/containers/
+web/dist/
+web_dist/
+housekeeper
+*.log

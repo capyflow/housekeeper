@@ -44,6 +44,12 @@ github.com/capyflow/vortexv3 v0.0.0-20260125075441-fa5f1ad27b86 h1:o1gR5HmW+wlw6
 github.com/capyflow/vortexv3 v0.0.0-20260125075441-fa5f1ad27b86/go.mod h1:fkJ9CnPV7v1nd4t35zlBWaxEQ1AUsCbrdjWLXAUk4Wo=
 github.com/capyflow/vortexv3 v0.0.0-20260125080612-b9a7104aae5f h1:GZjdlXYw2RV5jzFMRs6NM0A5F7pc19ygZzakq+35gw0=
 github.com/capyflow/vortexv3 v0.0.0-20260125080612-b9a7104aae5f/go.mod h1:fkJ9CnPV7v1nd4t35zlBWaxEQ1AUsCbrdjWLXAUk4Wo=
+github.com/capyflow/vortexv3 v0.0.0-20260125083455-61fc586bb1e6 h1:ISL2OFBl7srElnXEtwQfSMuCWeDz4bO1mgtqX7NFAuc=
+github.com/capyflow/vortexv3 v0.0.0-20260125083455-61fc586bb1e6/go.mod h1:fkJ9CnPV7v1nd4t35zlBWaxEQ1AUsCbrdjWLXAUk4Wo=
+github.com/capyflow/vortexv3 v0.0.0-20260125085017-a10cae03f285 h1:a3n7yVhD3wsqK/FNgBxZLaBKxUHK9q5h5YkgoqRGotA=
+github.com/capyflow/vortexv3 v0.0.0-20260125085017-a10cae03f285/go.mod h1:fkJ9CnPV7v1nd4t35zlBWaxEQ1AUsCbrdjWLXAUk4Wo=
+github.com/capyflow/vortexv3 v0.0.0-20260125085315-0870fe271d54 h1:coaaJuTDz/YOUUxy/JHvU6BPQJC8GAmfMaaOkRWa/So=
+github.com/capyflow/vortexv3 v0.0.0-20260125085315-0870fe271d54/go.mod h1:fkJ9CnPV7v1nd4t35zlBWaxEQ1AUsCbrdjWLXAUk4Wo=
 github.com/cespare/xxhash/v2 v2.3.0 h1:UL815xU9SqsFlibzuggzjXhog7bL6oX9BbNZnL2UFvs=
 github.com/cespare/xxhash/v2 v2.3.0/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
 github.com/cloudwego/base64x v0.1.6 h1:t11wG9AECkCDk5fMSoxmufanudBtJ+/HemLstXDLI2M=

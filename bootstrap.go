@@ -17,6 +17,7 @@ import (
 
 func main() {
 	var confPath = flag.String("c", "./internal/conf/config.toml", "config file path")
+	var staticPath = flag.String("s", "./web/dist", "static file path")
 	flag.Parse()
 
 	ctx := context.Background()
@@ -29,7 +30,7 @@ func main() {
 		panic("load config failed, err: " + err.Error())
 	}
 
-	hk := NewHousekeeper(ctx, config)
+	hk := NewHousekeeper(ctx, config, *staticPath)
 	hk.Start()
 	system.GracefulShutdown(hk.Stop)
 }
@@ -39,7 +40,7 @@ type Housekeeper struct {
 	vortexEngine *vortex.VortexEngine
 }
 
-func NewHousekeeper(ctx context.Context, config *conf.Config) *Housekeeper {
+func NewHousekeeper(ctx context.Context, config *conf.Config, staticPath string) *Housekeeper {
 	dsServer := ds.InitDatabaseServer(ctx, &ds.DsConfig{
 		Redis: config.RdbConfig.Redis,
 		Mongo: config.RdbConfig.Mongo,
@@ -62,11 +63,12 @@ func NewHousekeeper(ctx context.Context, config *conf.Config) *Housekeeper {
 	NotesHandler := handler.NewNotesHandler(ctx, NotesService)
 	UserHandler := handler.NewUserHandler(ctx, UserService)
 
-	routers := router.PrepareRouter(NotesHandler, UserHandler)
+	routers := router.PrepareRouter(NotesHandler, UserHandler, staticPath)
 
 	e := vortex.NewVortexEngine(ctx,
 		vortex.WithPort(int(config.Port)),
-		vortex.WithHttpRouterRootGroup(routers),
+		vortex.WithStaticDir(staticPath+"/**/*"), // LoadHTMLGlob 需要 glob 模式
+		vortex.WithHttpRouterRootGroup(routers),  // 展开多个路由组
 		vortex.WithJwtOption(config.Jwt),
 		vortex.WithI18n(locale.I18nValue.GetMap()))
 

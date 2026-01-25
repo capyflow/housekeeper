@@ -141,4 +141,52 @@ const { toasts } = useToast()
 .toast-list-leave-active {
   position: absolute;
 }
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .toast-container {
+    top: 16px;
+    left: 16px;
+    right: 16px;
+    transform: none;
+    width: auto;
+  }
+
+  .toast {
+    min-width: auto;
+    max-width: 100%;
+    padding: 12px 16px;
+  }
+
+  .toast-message {
+    font-size: 14px;
+  }
+
+  .toast-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .toast-icon .icon {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .toast-container {
+    top: 12px;
+    left: 12px;
+    right: 12px;
+  }
+
+  .toast {
+    padding: 10px 14px;
+    gap: 10px;
+  }
+
+  .toast-message {
+    font-size: 13px;
+  }
+}
 </style>

@@ -129,6 +129,9 @@ body {
   background-color: var(--bg-secondary);
   color: var(--text-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
+  /* 移动端优化 */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
 }
 
 /* Common Styles */
@@ -141,6 +144,9 @@ body {
   color: var(--text-primary);
   transition: all 0.2s;
   outline: none;
+  /* 移动端优化 */
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .input:hover {
@@ -162,6 +168,9 @@ button {
   outline: none;
   font-family: inherit;
   transition: all 0.2s;
+  /* 移动端优化 */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 button:disabled {
@@ -179,6 +188,8 @@ button:disabled {
   justify-content: center;
   gap: 8px;
   transition: all 0.2s;
+  /* 移动端优化 */
+  min-height: 44px; /* iOS推荐的最小触摸目标 */
 }
 
 .btn-primary {
@@ -291,5 +302,56 @@ button:disabled {
 a {
   text-decoration: none;
   color: inherit;
+}
+
+/* 移动端全局优化 */
+@media (max-width: 768px) {
+  :root {
+    /* 在移动端减小一些间距 */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 2px 4px -1px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 6px 12px -2px rgba(0, 0, 0, 0.15);
+  }
+
+  .input {
+    padding: 12px 14px;
+    font-size: 16px; /* 防止iOS自动缩放 */
+  }
+
+  .btn {
+    padding: 12px 18px;
+    font-size: 15px;
+  }
+
+  .card {
+    padding: 20px 16px;
+    border-radius: 10px;
+  }
+
+  .modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .modal {
+    border-radius: 16px 16px 0 0;
+    margin: 0;
+    margin-bottom: env(safe-area-inset-bottom, 0px);
+    padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@media (max-width: 480px) {
+  .input {
+    padding: 10px 12px;
+  }
+
+  .btn {
+    padding: 10px 16px;
+  }
+
+  .card {
+    padding: 16px 12px;
+  }
 }
 </style>

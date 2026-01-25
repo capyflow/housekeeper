@@ -389,4 +389,100 @@ onMounted(() => {
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 768px) {
+  .dashboard {
+    gap: 20px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .stat-card {
+    padding: 20px 16px;
+    gap: 12px;
+  }
+
+  .stat-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .stat-icon .icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+  }
+
+  .stat-value {
+    font-size: 24px;
+  }
+
+  .content-grid {
+    gap: 16px;
+  }
+
+  .card-title {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+
+  .board-item {
+    padding: 14px;
+  }
+
+  .board-name {
+    font-size: 15px;
+  }
+
+  .board-meta {
+    font-size: 12px;
+  }
+
+  .action-btn {
+    padding: 16px 14px;
+  }
+
+  .action-btn span {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .stat-card {
+    padding: 16px;
+  }
+
+  .stat-card::before {
+    height: 3px;
+  }
+
+  .stat-value {
+    font-size: 22px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  .board-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .board-owner {
+    align-self: flex-end;
+  }
+}
 </style>
