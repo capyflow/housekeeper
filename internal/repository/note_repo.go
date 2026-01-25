@@ -129,7 +129,7 @@ func (nr *NoteRepo) ListShareBoard(ctx context.Context, req *model.ListShareBoar
 	}
 	defer cursor.Close(ctx)
 
-	var list []model.ShareBoard
+	list := make([]model.ShareBoard, 0)
 	if err = cursor.All(ctx, &list); err != nil {
 		logx.Errorf("NoteRepo|ListShareBoard|All|Error|%v|%s", err, conv.ToJsonWithoutError(req))
 		return nil, 0, err

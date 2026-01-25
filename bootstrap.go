@@ -67,6 +67,7 @@ func NewHousekeeper(ctx context.Context, config *conf.Config) *Housekeeper {
 	e := vortex.NewVortexEngine(ctx,
 		vortex.WithPort(int(config.Port)),
 		vortex.WithHttpRouterRootGroup(routers),
+		vortex.WithJwtOption(config.Jwt),
 		vortex.WithI18n(locale.I18nValue.GetMap()))
 
 	return &Housekeeper{

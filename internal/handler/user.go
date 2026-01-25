@@ -38,7 +38,7 @@ func (uh *UserHandler) Login(ctx *vhttp.Context) error {
 	}
 
 	// 调用service层登录方法
-	resp, err := uh.userService.Login(uh.ctx, &req)
+	resp, err := uh.userService.Login(ctx, &req)
 	if err != nil {
 		logx.Errorf("UserHandler|Login|Service|Error|%v|%s", err, conv.ToJsonWithoutError(req))
 		if errors.Is(err, pkg.ErrorEnum.ErrPasswordInvalid) {

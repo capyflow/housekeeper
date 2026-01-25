@@ -3,19 +3,14 @@ package conf
 import (
 	"github.com/BurntSushi/toml"
 	"github.com/capyflow/allspark-go/ds"
+	vpkg "github.com/capyflow/vortexv3/pkg"
 )
 
 type Config struct {
-	Port      int64        `toml:"Port" json:"port"`            // 端口
-	RdbConfig *ds.DsConfig `toml:"RdbConfig" json:"rdb_config"` // 数据库配置
-	Jwt       *JwtOptions  `toml:"Jwt" json:"jwt"`              // JWT配置
-	Admin     *Admin       `toml:"Admin" json:"admin"`          // 管理员
-}
-
-type JwtOptions struct {
-	Secret          string `toml:"Secret" json:"secret"`                     // JWT密钥
-	Expire          int64  `toml:"Expire" json:"expire"`                     // JWT过期时间(小时)
-	SkipExpireCheck bool   `toml:"SkipExpireCheck" json:"skip_expire_check"` // 是否跳过过期时间检查
+	Port      int64           `toml:"Port" json:"port"`            // 端口
+	RdbConfig *ds.DsConfig    `toml:"RdbConfig" json:"rdb_config"` // 数据库配置
+	Jwt       *vpkg.JwtOption `toml:"Jwt" json:"jwt"`              // JWT配置
+	Admin     *Admin          `toml:"Admin" json:"admin"`          // 管理员
 }
 
 type Admin struct {

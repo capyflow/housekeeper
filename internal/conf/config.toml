@@ -15,8 +15,8 @@ username=""
 password=""
 
 [Jwt]
-Secret="123456"
-Expire=256000
+secret_key="123456"
+expire=256000
 
 [Admin]
 Username="aaron"

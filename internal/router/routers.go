@@ -30,5 +30,5 @@ func prepareNotesRouter(rootGroup *vhttp.VortexHttpRouterGroup,
 
 func prepareUserRouter(rootGroup *vhttp.VortexHttpRouterGroup, userHandler *handler.UserHandler) {
 	userGroup := rootGroup.AddGroup("/user")
-	userGroup.AddRouter([]string{http.MethodPost}, "/login", userHandler.Login)
+	userGroup.AddRouter([]string{http.MethodPost}, "/login", userHandler.Login, vhttp.WithSkipJwtVerify())
 }

@@ -8,3 +8,10 @@
 [1;31m[ERROR] 2026-01-25 14:52:57 UserHandler|Login|Service|Error|密码无效|{"username":"aaron","password":"aaron@519"}[0m
 [1;31m[ERROR] 2026-01-25 14:59:24 UserHandler|Login|Service|Error|密码无效|{"username":"aaron","password":"aaron@519"}[0m
 [1;31m[ERROR] 2026-01-25 15:00:43 UserHandler|Login|Service|Error|密码无效|{"username":"aaron","password":"aaron@519"}[0m
+[1;31m[ERROR] 2026-01-25 15:05:40 UserHandler|Login|Service|Error|密码无效|{"username":"aaron","password":"aaron@519"}[0m
+[1;31m[ERROR] 2026-01-25 15:06:52 UserHandler|Login|Service|Error|密码无效|{"username":"aaron","password":"aaron@519"}[0m
+[1;31m[ERROR] 2026-01-25 15:07:00 UserHandler|Login|Service|Error|密码无效|{"username":"aaron","password":"aaron@519"}[0m
+[1;31m[ERROR] 2026-01-25 15:10:36 UserHandler|Login|Service|Error|密码无效|{"username":"aaron","password":"aaron@519"}[0m
+[1;31m[ERROR] 2026-01-25 15:11:30 UserHandler|Login|Service|Error|密码无效|{"username":"aaron","password":"aaron@519"}[0m
+[1;31m[ERROR] 2026-01-25 15:29:05 UserHandler|Login|Service|Error|密码无效|{"username":"aaron","password":"aaron@519"}[0m
+[1;31m[ERROR] 2026-01-25 15:33:09 NotesHandler|HandlerQueryShareBoard|UnmarshalBody failed, err: invalid character '}' looking for beginning of value[0m
