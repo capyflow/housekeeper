@@ -9,10 +9,12 @@ import (
 
 func PrepareRouter(notesHandler *handler.NotesHandler,
 	userHandler *handler.UserHandler) *vhttp.VortexHttpRouterGroup {
-	rootGroup := vhttp.NewRootGroup("/v1")
-	prepareNotesRouter(rootGroup, notesHandler)
-	prepareUserRouter(rootGroup, userHandler)
-	return rootGroup
+	// API路由组（/v1前缀）
+	apiGroup := vhttp.NewRootGroup("/v1")
+	prepareNotesRouter(apiGroup, notesHandler)
+	prepareUserRouter(apiGroup, userHandler)
+
+	return apiGroup
 }
 
 func prepareNotesRouter(rootGroup *vhttp.VortexHttpRouterGroup,

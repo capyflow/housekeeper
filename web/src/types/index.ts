@@ -13,7 +13,7 @@ export interface CreateShareBoardReq {
   device_name: string
   board_name: string
   content: string
-  owner: string
+  owner?: string // 可选，后端会从token中解析
 }
 
 export interface UpdateShareBoardReq {

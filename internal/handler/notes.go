@@ -28,6 +28,9 @@ func (nh *NotesHandler) HandlerCreateShareBoard(ctx *vhttp.Context) error {
 		})
 	}
 
+	session := ctx.GetSession()
+	req.Owner = session.UID
+
 	if len(req.BoardName) == 0 || len(req.Content) == 0 {
 		logx.Errorf("NotesHandler|HandlerCreateShareBoard|params is invalid")
 		return ctx.JsonResponse(vhttp.Codes.BadRequest, map[string]any{

@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import router from '@/router'
 
 const instance: AxiosInstance = axios.create({
   baseURL: '/v1',
@@ -39,8 +40,10 @@ instance.interceptors.response.use(
   },
   (error) => {
     if (error.response?.status === 401) {
+      // 清除 token
       localStorage.removeItem('token')
-      window.location.href = '/login'
+      // 使用 router 跳转到登录页面
+      router.push('/login')
     }
     return Promise.reject(error)
   }

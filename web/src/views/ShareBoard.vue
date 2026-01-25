@@ -49,12 +49,12 @@
         <div class="board-header">
           <h3 class="board-title">{{ board.board_name }}</h3>
           <div class="board-actions">
-            <button class="icon-btn" @click="openEditModal(board)" title="编辑">
+            <button class="icon-btn" @click.stop="openEditModal(board)" title="编辑">
               <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
               </svg>
             </button>
-            <button class="icon-btn danger" @click="confirmDelete(board)" title="删除">
+            <button class="icon-btn danger" @click.stop="confirmDelete(board)" title="删除">
               <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
               </svg>
@@ -62,7 +62,7 @@
           </div>
         </div>
 
-        <div class="board-content">
+        <div class="board-content" @click="viewBoard(board)">
           <p class="content-text">{{ board.content }}</p>
         </div>
 
@@ -145,7 +145,19 @@
             ></textarea>
           </div>
 
-          <div class="form-group">
+          <!-- 创建模式下显示设备信息提示 -->
+          <div v-if="modalMode === 'create'" class="info-box">
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <div class="info-text">
+              <p>设备信息将自动获取</p>
+              <p class="info-detail">当前设备：{{ getDeviceInfo() }}</p>
+            </div>
+          </div>
+
+          <!-- 编辑模式下显示设备名称 -->
+          <div v-if="modalMode === 'edit'" class="form-group">
             <label for="device_name">设备名称</label>
             <input
               id="device_name"
@@ -153,17 +165,6 @@
               type="text"
               class="input"
               placeholder="请输入设备名称"
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="owner">所有者</label>
-            <input
-              id="owner"
-              v-model="formData.owner"
-              type="text"
-              class="input"
-              placeholder="请输入所有者"
             />
           </div>
 
@@ -196,19 +197,81 @@
         </div>
       </div>
     </div>
+
+    <!-- View Board Modal -->
+    <div v-if="showViewModal" class="modal-overlay" @click.self="closeViewModal">
+      <div class="modal view-modal">
+        <div class="modal-header">
+          <h3>{{ boardToView?.board_name }}</h3>
+          <button class="close-btn" @click="closeViewModal">
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="view-content">
+          <div class="view-section">
+            <div class="section-header">
+              <label class="section-label">内容</label>
+              <button class="btn-copy" @click="copyContent" :disabled="copying">
+                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                </svg>
+                {{ copying ? '复制中...' : '复制内容' }}
+              </button>
+            </div>
+            <div class="content-box">
+              {{ boardToView?.content }}
+            </div>
+          </div>
+
+          <div class="view-info">
+            <div class="info-item">
+              <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+              </svg>
+              <span>{{ boardToView?.device_name }}</span>
+            </div>
+            <div class="info-item">
+              <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+              <span>{{ boardToView?.owner }}</span>
+            </div>
+            <div class="info-item">
+              <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span>创建于 {{ formatFullDate(boardToView?.create_time) }}</span>
+            </div>
+            <div class="info-item">
+              <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+              </svg>
+              <span>更新于 {{ formatFullDate(boardToView?.update_time) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
 import { shareBoardApi } from '@/api/shareboard'
+import { getDeviceInfo } from '@/utils/device'
+import { useToast } from '@/composables/useToast'
 import type { ShareBoard } from '@/types'
+
+const toast = useToast()
 
 const loading = ref(false)
 const boards = ref<ShareBoard[]>([])
 const total = ref(0)
 const currentPage = ref(1)
-const pageSize = ref(9)
+const pageSize = ref(20)
 
 const filters = reactive({
   owner: ''
@@ -221,6 +284,10 @@ const submitting = ref(false)
 const showDeleteModal = ref(false)
 const boardToDelete = ref<ShareBoard | null>(null)
 const deleting = ref(false)
+
+const showViewModal = ref(false)
+const boardToView = ref<ShareBoard | null>(null)
+const copying = ref(false)
 
 const formData = reactive({
   id: '',
@@ -252,6 +319,19 @@ const formatDate = (timestamp: number) => {
   })
 }
 
+const formatFullDate = (timestamp?: number) => {
+  if (!timestamp) return '-'
+  const date = new Date(timestamp)
+  return date.toLocaleString('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  })
+}
+
 const fetchBoards = async () => {
   loading.value = true
   try {
@@ -264,7 +344,7 @@ const fetchBoards = async () => {
     total.value = res.total || 0
   } catch (error) {
     console.error('Failed to fetch boards:', error)
-    alert('加载数据失败')
+    toast.error('加载数据失败')
   } finally {
     loading.value = false
   }
@@ -314,29 +394,57 @@ const handleSubmit = async () => {
   submitting.value = true
   try {
     if (modalMode.value === 'create') {
+      // 创建模式：自动获取设备名称，所有者由后端从token解析
+      const deviceName = getDeviceInfo()
+
       await shareBoardApi.create({
         board_name: formData.board_name,
         content: formData.content,
-        device_name: formData.device_name,
-        owner: formData.owner
+        device_name: deviceName
       })
-      alert('创建成功')
+      toast.success('创建成功')
     } else {
+      // 编辑模式：使用表单中的值
       await shareBoardApi.update({
         id: formData.id,
         board_name: formData.board_name,
         content: formData.content,
         device_name: formData.device_name
       })
-      alert('更新成功')
+      toast.success('更新成功')
     }
     closeModal()
     fetchBoards()
   } catch (error) {
     console.error('Failed to submit:', error)
-    alert('操作失败')
+    toast.error('操作失败')
   } finally {
     submitting.value = false
+  }
+}
+
+const viewBoard = (board: ShareBoard) => {
+  boardToView.value = board
+  showViewModal.value = true
+}
+
+const closeViewModal = () => {
+  showViewModal.value = false
+  boardToView.value = null
+}
+
+const copyContent = async () => {
+  if (!boardToView.value) return
+
+  copying.value = true
+  try {
+    await navigator.clipboard.writeText(boardToView.value.content)
+    toast.success('内容已复制到剪贴板')
+  } catch (error) {
+    console.error('Failed to copy:', error)
+    toast.error('复制失败，请手动复制')
+  } finally {
+    copying.value = false
   }
 }
 
@@ -351,12 +459,12 @@ const handleDelete = async () => {
   deleting.value = true
   try {
     await shareBoardApi.delete(boardToDelete.value.id)
-    alert('删除成功')
+    toast.success('删除成功')
     showDeleteModal.value = false
     fetchBoards()
   } catch (error) {
     console.error('Failed to delete:', error)
-    alert('删除失败')
+    toast.error('删除失败')
   } finally {
     deleting.value = false
   }
@@ -371,25 +479,28 @@ onMounted(() => {
 .shareboard-page {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 28px;
 }
 
 .page-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 8px;
 }
 
 .header-left h2 {
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 28px;
+  font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 4px;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
 }
 
 .subtitle {
-  font-size: 14px;
+  font-size: 15px;
   color: var(--text-secondary);
+  line-height: 1.5;
 }
 
 .filters {
@@ -398,7 +509,7 @@ onMounted(() => {
 }
 
 .filter-input {
-  max-width: 300px;
+  max-width: 320px;
 }
 
 .loading {
@@ -406,18 +517,18 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 60px 20px;
+  padding: 80px 20px;
   color: var(--text-secondary);
 }
 
 .spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid var(--border-color);
+  width: 48px;
+  height: 48px;
+  border: 4px solid var(--border-color);
   border-top-color: var(--primary-color);
   border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 12px;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 16px;
 }
 
 @keyframes spin {
@@ -426,46 +537,69 @@ onMounted(() => {
 
 .empty-state {
   text-align: center;
-  padding: 60px 20px;
+  padding: 80px 20px;
 }
 
 .empty-icon {
-  width: 64px;
-  height: 64px;
-  color: var(--text-secondary);
-  margin: 0 auto 16px;
+  width: 80px;
+  height: 80px;
+  color: var(--text-tertiary);
+  margin: 0 auto 20px;
+  opacity: 0.5;
 }
 
 .empty-state h3 {
-  font-size: 18px;
+  font-size: 20px;
+  font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .empty-state p {
   color: var(--text-secondary);
+  font-size: 15px;
 }
 
 .boards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 24px;
 }
 
 .board-card {
   background-color: var(--bg-primary);
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.board-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-purple), var(--accent-orange));
+  transform: scaleX(0);
+  transition: transform 0.3s;
 }
 
 .board-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+  border-color: var(--primary-color);
+}
+
+.board-card:hover::before {
+  transform: scaleX(1);
 }
 
 .board-header {
@@ -475,13 +609,14 @@ onMounted(() => {
 }
 
 .board-title {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 19px;
+  font-weight: 700;
   color: var(--text-primary);
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  letter-spacing: -0.3px;
 }
 
 .board-actions {
@@ -490,40 +625,54 @@ onMounted(() => {
 }
 
 .icon-btn {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
   background-color: transparent;
   color: var(--text-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
 }
 
 .icon-btn:hover {
-  background-color: var(--bg-secondary);
+  background-color: var(--primary-light);
   color: var(--primary-color);
+  border-color: var(--primary-color);
+  transform: scale(1.1);
 }
 
 .icon-btn.danger:hover {
+  background-color: rgba(239, 68, 68, 0.1);
   color: var(--danger-color);
+  border-color: var(--danger-color);
 }
 
 .icon-btn .icon {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
 }
 
 .board-content {
   flex: 1;
-  min-height: 80px;
+  min-height: 90px;
+  cursor: pointer;
+  padding: 4px;
+  margin: -4px;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.board-content:hover {
+  background-color: var(--bg-secondary);
 }
 
 .content-text {
   font-size: 14px;
   color: var(--text-secondary);
-  line-height: 1.6;
+  line-height: 1.7;
   word-break: break-word;
   display: -webkit-box;
   -webkit-line-clamp: 4;
@@ -535,120 +684,291 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 12px;
-  border-top: 1px solid var(--border-color);
+  padding-top: 16px;
+  border-top: 1px solid var(--border-light);
 }
 
 .board-meta {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .meta-item {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   font-size: 13px;
+  font-weight: 500;
   color: var(--text-secondary);
 }
 
 .meta-item .icon {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
+  opacity: 0.7;
 }
 
 .board-time {
   font-size: 12px;
-  color: var(--text-secondary);
+  font-weight: 500;
+  color: var(--text-tertiary);
+  padding: 6px 12px;
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
 }
 
 .pagination {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  padding: 20px 0;
+  gap: 20px;
+  padding: 24px 0;
 }
 
 .page-info {
   font-size: 14px;
+  font-weight: 500;
   color: var(--text-secondary);
+  padding: 10px 16px;
+  background-color: var(--bg-primary);
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
 }
 
 .modal-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
 
 .modal-header h3 {
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 24px;
+  font-weight: 700;
   color: var(--text-primary);
+  letter-spacing: -0.3px;
 }
 
 .close-btn {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
   background-color: transparent;
   color: var(--text-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s;
+  transition: all 0.3s;
+  border: 1px solid transparent;
 }
 
 .close-btn:hover {
   background-color: var(--bg-secondary);
   color: var(--text-primary);
+  border-color: var(--border-color);
+  transform: scale(1.05);
 }
 
 .close-btn .icon {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
 }
 
 .modal-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .form-group label {
   font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.3px;
+}
+
+.info-box {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  background-color: var(--primary-light);
+  border-radius: 12px;
+  border: 1px solid var(--primary-color);
+  align-items: flex-start;
+}
+
+.info-box .icon {
+  width: 22px;
+  height: 22px;
+  color: var(--primary-color);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.info-text {
+  flex: 1;
+}
+
+.info-text p {
+  font-size: 14px;
   font-weight: 500;
   color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.info-detail {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-bottom: 0 !important;
 }
 
 .textarea {
   resize: vertical;
-  min-height: 120px;
+  min-height: 140px;
   font-family: inherit;
+  line-height: 1.6;
 }
 
 .modal-actions {
   display: flex;
   gap: 12px;
   justify-content: flex-end;
-  margin-top: 8px;
+  margin-top: 12px;
 }
 
 .modal-sm {
-  max-width: 400px;
+  max-width: 460px;
 }
 
 .modal-content {
-  margin: 20px 0;
+  margin: 24px 0;
   color: var(--text-secondary);
-  line-height: 1.6;
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+/* View Modal Styles */
+.view-modal {
+  max-width: 700px;
+}
+
+.view-content {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.view-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-copy {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-purple) 100%);
+  color: white;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+}
+
+.btn-copy:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.btn-copy:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-copy:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-copy .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.content-box {
+  padding: 20px;
+  background-color: var(--bg-secondary);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-size: 15px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  word-break: break-word;
+  min-height: 120px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.view-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  padding: 20px;
+  background-color: var(--bg-secondary);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.info-item .icon {
+  width: 18px;
+  height: 18px;
+  color: var(--primary-color);
+  flex-shrink: 0;
+}
+
+.info-item span {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .view-info {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
