@@ -90,9 +90,28 @@ make build
 ./housekeeper -c ./internal/conf/config.toml
 ```
 
+### Docker 部署
+
+```bash
+# 构建并启动所有服务（Housekeeper + Redis + MongoDB）
+make docker-up
+
+# 查看服务状态
+make docker-status
+
+# 查看日志
+make docker-logs
+
+# 停止服务
+make docker-down
+```
+
+访问：http://localhost:19090
+
 详细的构建和部署说明，请参考：
 - [前端构建说明](web/BUILD.md)
 - [部署指南](DEPLOYMENT.md)
+- [Docker 部署指南](deploy/README.md)
 
 ## 📖 项目结构
 

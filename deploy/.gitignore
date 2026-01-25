@@ -1,0 +1,12 @@
+# 数据目录
+containers/
+
+# 环境变量文件
+.env
+
+# 备份文件
+*.backup
+backup/
+
+# 日志文件
+*.log
