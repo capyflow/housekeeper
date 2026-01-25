@@ -61,7 +61,7 @@ func NewHousekeeper(ctx context.Context, config *conf.Config) *Housekeeper {
 	NotesHandler := handler.NewNotesHandler(ctx, NotesService)
 	UserHandler := handler.NewUserHandler(ctx, UserService)
 
-	routers := router.PrepareRouter(NotesHandler, UserHandler, UserService)
+	routers := router.PrepareRouter(NotesHandler, UserHandler)
 
 	e := vortex.NewVortexEngine(ctx,
 		vortex.WithPort(int(config.Port)),

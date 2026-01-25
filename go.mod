@@ -5,7 +5,7 @@ go 1.25.5
 require (
 	github.com/BurntSushi/toml v1.6.0
 	github.com/capyflow/allspark-go v0.1.3
-	github.com/capyflow/vortexv3 v0.0.0-20251216155301-d3db108c971a
+	github.com/capyflow/vortexv3 v0.0.0-20260121130936-3990b7839d92
 )
 
 require (
