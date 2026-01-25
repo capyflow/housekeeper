@@ -11,11 +11,12 @@ import (
 	"github.com/capyflow/housekeeper/internal/repository"
 	"github.com/capyflow/housekeeper/internal/router"
 	services "github.com/capyflow/housekeeper/internal/service"
+	"github.com/capyflow/housekeeper/locale"
 	vortex "github.com/capyflow/vortexv3"
 )
 
 func main() {
-	var confPath = flag.String("c", "./conf/config.toml", "config file path")
+	var confPath = flag.String("c", "./internal/conf/config.toml", "config file path")
 	flag.Parse()
 
 	ctx := context.Background()
@@ -65,7 +66,8 @@ func NewHousekeeper(ctx context.Context, config *conf.Config) *Housekeeper {
 
 	e := vortex.NewVortexEngine(ctx,
 		vortex.WithPort(int(config.Port)),
-		vortex.WithHttpRouterRootGroup(routers))
+		vortex.WithHttpRouterRootGroup(routers),
+		vortex.WithI18n(locale.I18nValue.GetMap()))
 
 	return &Housekeeper{
 		config:       config,

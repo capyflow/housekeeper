@@ -4,7 +4,7 @@ JwtExpire=24
 
 [RdbConfig.redis]
 host="127.0.0.1"
-port=36379
+port=6379
 username="default"
 password="1433223qQ"
 
@@ -14,11 +14,10 @@ port=27017
 username=""
 password=""
 
-
 [Jwt]
 Secret="123456"
 Expire=256000
 
 [Admin]
 Username="aaron"
-Password="aaron@519"
+Password="aaron519"
