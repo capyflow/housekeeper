@@ -1,6 +1,4 @@
 Port=19090
-JwtSecret="your-secret-key-change-this-in-production"
-JwtExpire=24
 
 [RdbConfig.redis]
 host="127.0.0.1"

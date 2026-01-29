@@ -5,5 +5,7 @@ web_dist/
 housekeeper
 *.log
 
+vendor/
+
 # Docker
 .dockerignore

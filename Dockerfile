@@ -20,24 +20,24 @@ RUN npm run build
 # ==========================================
 # 阶段2: 构建后端
 # ==========================================
-FROM golang:1.21-alpine AS backend-builder
+FROM golang:1.25-alpine AS backend-builder
 
 WORKDIR /app
 
 # 安装必要的编译工具
-RUN apk add --no-cache git
+RUN apk add --no-cache git wget vim
 
 # 复制 Go 模块依赖文件
 COPY go.mod go.sum ./
 
-# 下载依赖
-RUN go mod download
+# 复制 vendor 目录
+COPY vendor vendor
 
 # 复制后端源代码
 COPY . .
 
 # 构建后端可执行文件
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o housekeeper .
+RUN CGO_ENABLED=0 GOOS=linux go build -mod=vendor -a -installsuffix cgo -o housekeeper .
 
 # ==========================================
 # 阶段3: 运行时镜像
