@@ -28,6 +28,13 @@ func prepareStaticRouter(rootGroup *vhttp.VortexHttpRouterGroup, staticPath stri
 		return nil
 	})
 
+	// /webui/icon.png - 直接返回图标
+	rootGroup.AddStaticRouter("/webui/icon.png", func(ctx *vhttp.Context) error {
+		iconPath := filepath.Join(staticPath, "icon.png")
+		ctx.GinContext().File(iconPath)
+		return nil
+	})
+
 	rootGroup.AddStaticRouter("/webui/*path", func(ctx *vhttp.Context) error {
 		path := ctx.GinContext().Param("path")
 		if strings.HasPrefix(path, "/assets/") {
