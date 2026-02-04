@@ -30,13 +30,14 @@ func prepareStaticRouter(rootGroup *vhttp.VortexHttpRouterGroup, staticPath stri
 
 	rootGroup.AddStaticRouter("/webui/*path", func(ctx *vhttp.Context) error {
 		path := ctx.GinContext().Param("path")
-		if path == "/icon.png" {
+		trimmedPath := strings.TrimPrefix(path, "/")
+		if trimmedPath == "icon.png" {
 			iconPath := filepath.Join(staticPath, "icon.png")
 			ctx.GinContext().File(iconPath)
 			return nil
 		}
-		if strings.HasPrefix(path, "/assets/") {
-			filePath := strings.TrimPrefix(path, "/assets/")
+		if strings.HasPrefix(trimmedPath, "assets/") {
+			filePath := strings.TrimPrefix(trimmedPath, "assets/")
 			fullPath := filepath.Join(staticPath, "assets", filePath)
 			ctx.GinContext().File(fullPath)
 			return nil
