@@ -438,7 +438,32 @@ const copyContent = async () => {
 
   copying.value = true
   try {
-    await navigator.clipboard.writeText(boardToView.value.content)
+    const text = boardToView.value.content ?? ''
+
+    const canUseClipboard =
+      typeof navigator !== 'undefined' &&
+      !!navigator.clipboard &&
+      typeof navigator.clipboard.writeText === 'function' &&
+      window.isSecureContext
+
+    if (canUseClipboard) {
+      await navigator.clipboard.writeText(text)
+    } else {
+      const textarea = document.createElement('textarea')
+      textarea.value = text
+      textarea.setAttribute('readonly', 'true')
+      textarea.style.position = 'fixed'
+      textarea.style.top = '0'
+      textarea.style.left = '-9999px'
+      document.body.appendChild(textarea)
+      textarea.select()
+      textarea.setSelectionRange(0, textarea.value.length)
+      const success = document.execCommand('copy')
+      document.body.removeChild(textarea)
+      if (!success) {
+        throw new Error('document.execCommand(copy) failed')
+      }
+    }
     toast.success('内容已复制到剪贴板')
   } catch (error) {
     console.error('Failed to copy:', error)
