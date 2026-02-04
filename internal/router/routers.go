@@ -21,19 +21,26 @@ func PrepareRouter(notesHandler *handler.NotesHandler,
 
 func prepareStaticRouter(rootGroup *vhttp.VortexHttpRouterGroup, staticPath string) {
 	// 静态资源路由 - 处理 /assets/* 下的 JS/CSS 文件
-	rootGroup.AddStaticRouter("/assets/*filepath", func(ctx *vhttp.Context) error {
+	rootGroup.AddStaticRouter("/webui/assets/*filepath", func(ctx *vhttp.Context) error {
 		filePath := ctx.GinContext().Param("filepath")
 		fullPath := filepath.Join(staticPath, "assets", filePath)
 		ctx.GinContext().File(fullPath)
 		return nil
 	})
 
-	// 根路径和主页面路由 - 返回 index.html
-	rootGroup.AddStaticRouter("/", func(ctx *vhttp.Context) error {
+	// /webui 入口 - 返回 index.html
+	rootGroup.AddStaticRouter("/webui", func(ctx *vhttp.Context) error {
 		indexPath := filepath.Join(staticPath, "index.html")
 		ctx.GinContext().File(indexPath)
 		return nil
 	})
+
+	rootGroup.AddStaticRouter("/webui/*path", func(ctx *vhttp.Context) error {
+		indexPath := filepath.Join(staticPath, "index.html")
+		ctx.GinContext().File(indexPath)
+		return nil
+	})
+
 }
 
 func prepareNotesRouter(rootGroup *vhttp.VortexHttpRouterGroup,
