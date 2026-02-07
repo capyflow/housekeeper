@@ -40,8 +40,7 @@
       <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
       </svg>
-      <h3>暂无看板</h3>
-      <p>点击上方"创建看板"按钮开始创建</p>
+      <h3>暂无数据</h3>
     </div>
 
     <div v-else class="boards-grid">
@@ -561,28 +560,25 @@ onMounted(() => {
 }
 
 .empty-state {
+  background-color: var(--bg-primary);
+  border-radius: 16px;
+  padding: 48px;
   text-align: center;
-  padding: 80px 20px;
+  border: 1px solid var(--border-color);
 }
 
 .empty-icon {
-  width: 80px;
-  height: 80px;
-  color: var(--text-tertiary);
-  margin: 0 auto 20px;
-  opacity: 0.5;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 16px;
+  color: var(--text-secondary);
 }
 
 .empty-state h3 {
   font-size: 20px;
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 10px;
-}
-
-.empty-state p {
-  color: var(--text-secondary);
-  font-size: 15px;
+  margin: 0;
 }
 
 .boards-grid {
