@@ -67,3 +67,58 @@ func (ns *NotesService) ListShareBoard(ctx context.Context, req *model.ListShare
 		List:  list,
 	}, nil
 }
+
+// 创建笔记
+func (ns *NotesService) CreateNote(ctx context.Context, req *model.CreateNoteReq) (*model.Note, error) {
+	noteId := "n_" + pkg.GenerateRandomString(15)
+	info := &model.Note{
+		Id:       noteId,
+		Title:    req.Title,
+		Content:  req.Content,
+		Owner:    req.Owner,
+		Cover:    req.Cover,
+		CreateTs: time.Now().UnixMilli(),
+		UpdateTs: time.Now().UnixMilli(),
+		ModifyTs: time.Now().UnixMilli(),
+	}
+	return info, ns.noteRepo.CreateNote(ctx, info)
+}
+
+// 更新笔记
+func (ns *NotesService) UpdateNote(ctx context.Context, req *model.UpdateNoteReq) error {
+	return ns.noteRepo.UpdateNote(ctx, req)
+}
+
+// 删除笔记
+func (ns *NotesService) DeleteNote(ctx context.Context, id string) error {
+	return ns.noteRepo.DeleteNote(ctx, id)
+}
+
+// 查询笔记详情
+func (ns *NotesService) GetNote(ctx context.Context, id string) (*model.Note, error) {
+	return ns.noteRepo.GetNote(ctx, id)
+}
+
+// 分页查询笔记
+func (ns *NotesService) ListNote(ctx context.Context, req *model.ListNoteReq) (*model.ListNoteResp, error) {
+	if req.Page <= 0 {
+		req.Page = 1
+	}
+	if req.PageSize <= 0 {
+		req.PageSize = 10
+	}
+	if req.PageSize > 100 {
+		req.PageSize = 100
+	}
+
+	list, total, err := ns.noteRepo.ListNotes(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.ListNoteResp{
+		Total: total,
+		Page:  req.Page,
+		List:  list,
+	}, nil
+}

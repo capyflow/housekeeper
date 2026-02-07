@@ -52,14 +52,17 @@ func prepareStaticRouter(rootGroup *vhttp.VortexHttpRouterGroup, staticPath stri
 func prepareNotesRouter(rootGroup *vhttp.VortexHttpRouterGroup,
 	notesHandler *handler.NotesHandler) {
 	notesGroup := rootGroup.AddGroup("/notes")
-	notesGroup.AddRouter([]string{http.MethodPost}, "/share_board/create",
-		notesHandler.HandlerCreateShareBoard)
-	notesGroup.AddRouter([]string{http.MethodPut}, "/share_board/update",
-		notesHandler.HandlerUpdateShareBoard)
-	notesGroup.AddRouter([]string{http.MethodDelete}, "/share_board/delete",
-		notesHandler.HandlerDeleteShareBoard)
-	notesGroup.AddRouter([]string{http.MethodPost}, "/share_board/list",
-		notesHandler.HandlerListShareBoard)
+	notesGroup.AddRouter([]string{http.MethodPost}, "/share_board/create", notesHandler.HandlerCreateShareBoard)   // 创建分享
+	notesGroup.AddRouter([]string{http.MethodPut}, "/share_board/update", notesHandler.HandlerUpdateShareBoard)    // 修改分享
+	notesGroup.AddRouter([]string{http.MethodDelete}, "/share_board/delete", notesHandler.HandlerDeleteShareBoard) // 删除分享
+	notesGroup.AddRouter([]string{http.MethodPost}, "/share_board/list", notesHandler.HandlerListShareBoard)       // 获取分享
+
+	notesGroup.AddRouter([]string{http.MethodPost}, "/note/create", notesHandler.HandlerCreateNote)   // 创建笔记
+	notesGroup.AddRouter([]string{http.MethodPut}, "/note/update", notesHandler.HandlerUpdateNote)    // 修改笔记
+	notesGroup.AddRouter([]string{http.MethodDelete}, "/note/delete", notesHandler.HandlerDeleteNote) // 删除笔记
+	notesGroup.AddRouter([]string{http.MethodPost}, "/note/info", notesHandler.HandlerNoteInfo)       // 查询笔记详情
+	notesGroup.AddRouter([]string{http.MethodPost}, "/note/list", notesHandler.HandlerListNote)       // 获取笔记
+
 }
 
 func prepareUserRouter(rootGroup *vhttp.VortexHttpRouterGroup, userHandler *handler.UserHandler) {

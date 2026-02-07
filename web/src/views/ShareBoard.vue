@@ -587,14 +587,14 @@ onMounted(() => {
 
 .boards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
 }
 
 .board-card {
   background-color: var(--bg-primary);
   border-radius: 16px;
-  padding: 24px;
+  padding: 20px;
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--border-color);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -634,7 +634,7 @@ onMounted(() => {
 }
 
 .board-title {
-  font-size: 19px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--text-primary);
   flex: 1;
@@ -682,7 +682,7 @@ onMounted(() => {
 
 .board-content {
   flex: 1;
-  min-height: 90px;
+  min-height: 72px;
   cursor: pointer;
   padding: 4px;
   margin: -4px;
@@ -723,7 +723,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   color: var(--text-secondary);
 }

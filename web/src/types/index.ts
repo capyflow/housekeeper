@@ -35,6 +35,48 @@ export interface ListShareBoardResp {
   list: ShareBoard[]
 }
 
+// Note types
+export interface Note {
+  id: string
+  title: string
+  content: string
+  owner: string
+  create_ts: number
+  update_ts: number
+  modify_ts: number
+  cover: string
+}
+
+export interface ListNoteReq {
+  page: number
+  page_size: number
+  owner?: string
+}
+
+export interface ListNoteResp {
+  total: number
+  page: number
+  list: Note[]
+}
+
+export interface CreateNoteReq {
+  title: string
+  content: string
+  cover?: string
+  owner?: string
+}
+
+export interface UpdateNoteReq {
+  id: string
+  title: string
+  content: string
+  cover?: string
+}
+
+export interface DeleteNoteReq {
+  id: string
+}
+
 // User types
 export interface User {
   id: string
