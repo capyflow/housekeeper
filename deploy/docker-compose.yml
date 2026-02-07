@@ -8,7 +8,6 @@ services:
       dockerfile: Dockerfile
     image: housekeeper:latest
     container_name: housekeeper-app
-    user: "1000:1000"
     ports:
       - "19090:19090"
     volumes:
@@ -37,7 +36,6 @@ services:
   redis:
     image: redis/redis-stack-server:latest
     container_name: housekeeper-redis
-    user: "1000:1000"
     ports:
       - "6379:6379"
     volumes:
@@ -58,7 +56,6 @@ services:
   mongo:
     image: mongo:latest
     container_name: housekeeper-mongo
-    user: "1000:1000"
     ports:
       - "27017:27017"
     volumes:
