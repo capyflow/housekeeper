@@ -39,6 +39,12 @@ cmd_stop() {
   (cd "${DEPLOY_DIR}" && docker compose down)
 }
 
+cmd_status() {
+  ensure_deploy_dir
+  echo "==> Checking service status"
+  (cd "${DEPLOY_DIR}" && docker compose ps)
+}
+
 cmd_restart() {
   cmd_stop
   cmd_deploy
@@ -50,6 +56,9 @@ case "${1:-}" in
     ;;
   stop)
     cmd_stop
+    ;;
+  status)
+    cmd_status
     ;;
   restart)
     cmd_restart
