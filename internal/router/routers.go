@@ -49,6 +49,13 @@ func prepareStaticRouter(rootGroup *vhttp.VortexHttpRouterGroup, staticPath stri
 
 }
 
+// 用户路由组
+func prepareUserRouter(rootGroup *vhttp.VortexHttpRouterGroup, userHandler *handler.UserHandler) {
+	userGroup := rootGroup.AddGroup("/user")
+	userGroup.AddRouter([]string{http.MethodPost}, "/login", userHandler.Login, vhttp.WithSkipJwtVerify())
+}
+
+// 笔记路由组
 func prepareNotesRouter(rootGroup *vhttp.VortexHttpRouterGroup,
 	notesHandler *handler.NotesHandler) {
 	notesGroup := rootGroup.AddGroup("/notes")
@@ -62,10 +69,4 @@ func prepareNotesRouter(rootGroup *vhttp.VortexHttpRouterGroup,
 	notesGroup.AddRouter([]string{http.MethodDelete}, "/note/delete", notesHandler.HandlerDeleteNote) // 删除笔记
 	notesGroup.AddRouter([]string{http.MethodPost}, "/note/info", notesHandler.HandlerNoteInfo)       // 查询笔记详情
 	notesGroup.AddRouter([]string{http.MethodPost}, "/note/list", notesHandler.HandlerListNote)       // 获取笔记
-
-}
-
-func prepareUserRouter(rootGroup *vhttp.VortexHttpRouterGroup, userHandler *handler.UserHandler) {
-	userGroup := rootGroup.AddGroup("/user")
-	userGroup.AddRouter([]string{http.MethodPost}, "/login", userHandler.Login, vhttp.WithSkipJwtVerify())
 }
