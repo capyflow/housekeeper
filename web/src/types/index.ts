@@ -77,6 +77,36 @@ export interface DeleteNoteReq {
   id: string
 }
 
+// Record types
+export interface Record {
+  id: string
+  title: string
+  create_ts: number
+  record_ts: number[]
+}
+
+export interface CreateRecordReq {
+  title: string
+  record_ts: number[]
+}
+
+export interface UpdateRecordReq {
+  id: string
+  title: string
+  record_ts: number[]
+}
+
+export interface ListRecordReq {
+  page: number
+  page_size: number
+}
+
+export interface ListRecordResp {
+  total: number
+  page: number
+  list: Record[]
+}
+
 // User types
 export interface User {
   id: string

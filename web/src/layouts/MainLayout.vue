@@ -36,6 +36,12 @@
             笔记
           </router-link>
         </div>
+        <router-link to="/record" class="nav-item" exact-active-class="active" @click="closeSidebarOnMobile">
+          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+          <span>打卡</span>
+        </router-link>
       </nav>
     </aside>
 
@@ -100,7 +106,8 @@ const currentPageTitle = computed(() => {
   const titleMap: Record<string, string> = {
     Dashboard: '仪表盘',
     ShareBoard: '共享看板',
-    Notes: '笔记'
+    Notes: '笔记',
+    Record: '打卡'
   }
   return titleMap[route.name as string] || '首页'
 })

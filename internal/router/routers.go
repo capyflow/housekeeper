@@ -10,11 +10,13 @@ import (
 )
 
 func PrepareRouter(notesHandler *handler.NotesHandler,
+	recordHandler *handler.RecordHandler,
 	userHandler *handler.UserHandler, staticPath string) *vhttp.VortexHttpRouterGroup {
 	rootGroup := vhttp.NewRootGroup("")
 	// API路由组（/v1前缀）
 	apiGroup := rootGroup.AddGroup("/v1")
 	prepareNotesRouter(apiGroup, notesHandler)
+	prepareRecordRouter(apiGroup, recordHandler)
 	prepareUserRouter(apiGroup, userHandler)
 	prepareStaticRouter(rootGroup, staticPath)
 	return rootGroup
@@ -69,4 +71,14 @@ func prepareNotesRouter(rootGroup *vhttp.VortexHttpRouterGroup,
 	notesGroup.AddRouter([]string{http.MethodDelete}, "/note/delete", notesHandler.HandlerDeleteNote) // 删除笔记
 	notesGroup.AddRouter([]string{http.MethodPost}, "/note/info", notesHandler.HandlerNoteInfo)       // 查询笔记详情
 	notesGroup.AddRouter([]string{http.MethodPost}, "/note/list", notesHandler.HandlerListNote)       // 获取笔记
+}
+
+// 打卡路由组
+func prepareRecordRouter(rootGroup *vhttp.VortexHttpRouterGroup, recordHandler *handler.RecordHandler) {
+	recordGroup := rootGroup.AddGroup("/record")
+	recordGroup.AddRouter([]string{http.MethodPost}, "/create", recordHandler.HandlerCreateRecord)   // 创建打卡记录
+	recordGroup.AddRouter([]string{http.MethodPut}, "/update", recordHandler.HandlerUpdateRecord)    // 修改打卡记录
+	recordGroup.AddRouter([]string{http.MethodDelete}, "/delete", recordHandler.HandlerDeleteRecord) // 删除打卡记录
+	recordGroup.AddRouter([]string{http.MethodPost}, "/info", recordHandler.HandlerRecordInfo)       // 查询打卡记录详情
+	recordGroup.AddRouter([]string{http.MethodPost}, "/list", recordHandler.HandlerListRecord)       // 分页查询打卡记录
 }
