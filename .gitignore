@@ -1,10 +1,10 @@
 .idea/
 deploy/containers/
+deploy/config.docker.toml
 web/dist/
 web_dist/
 housekeeper
 *.log
-
 vendor/
 
 # Docker

@@ -49,6 +49,13 @@ func (nr *NoteRepo) prepareIndex() {
 	if err != nil {
 		panic("create index failed, err: " + err.Error())
 	}
+	_, err = nr.mdb.Collection(mongoNoteCollection).Indexes().CreateOne(nr.ctx, mongo.IndexModel{
+		Keys:    bson.D{{Key: "id", Value: 1}},
+		Options: options.Index().SetUnique(true),
+	})
+	if err != nil {
+		panic("create index failed, err: " + err.Error())
+	}
 }
 
 // 创建共享看板
@@ -132,6 +139,101 @@ func (nr *NoteRepo) ListShareBoard(ctx context.Context, req *model.ListShareBoar
 	list := make([]model.ShareBoard, 0)
 	if err = cursor.All(ctx, &list); err != nil {
 		logx.Errorf("NoteRepo|ListShareBoard|All|Error|%v|%s", err, conv.ToJsonWithoutError(req))
+		return nil, 0, err
+	}
+
+	return list, total, nil
+}
+
+// 创建笔记
+func (nr *NoteRepo) CreateNote(ctx context.Context, note *model.Note) error {
+	if len(note.Id) == 0 {
+		note.Id = "n_" + pkg.GenerateRandomString(15)
+	}
+	_, err := nr.mdb.Collection(mongoNoteCollection).InsertOne(ctx, note)
+	if err != nil {
+		logx.Errorf("NoteRepo|CreateNote|InsertOne|Error|%v|%s", err, conv.ToJsonWithoutError(note))
+		return err
+	}
+	return nil
+}
+
+// 更新笔记
+func (nr *NoteRepo) UpdateNote(ctx context.Context, req *model.UpdateNoteReq) error {
+	filter := bson.M{"id": req.Id}
+	update := bson.M{
+		"$set": bson.M{
+			"title":     req.Title,
+			"content":   req.Content,
+			"cover":     req.Cover,
+			"modify_ts": time.Now().UnixMilli(),
+		},
+	}
+	result, err := nr.mdb.Collection(mongoNoteCollection).UpdateOne(ctx, filter, update)
+	if err != nil {
+		logx.Errorf("NoteRepo|UpdateNote|UpdateOne|Error|%v|%s", err, conv.ToJsonWithoutError(req))
+		return err
+	}
+	if result.MatchedCount == 0 {
+		logx.Errorf("NoteRepo|UpdateNote|NotFound|%s", req.Id)
+		return mongo.ErrNoDocuments
+	}
+	return nil
+}
+
+// 删除笔记
+func (nr *NoteRepo) DeleteNote(ctx context.Context, id string) error {
+	filter := bson.M{"id": id}
+	result, err := nr.mdb.Collection(mongoNoteCollection).DeleteOne(ctx, filter)
+	if err != nil {
+		logx.Errorf("NoteRepo|DeleteNote|DeleteOne|Error|%v|%s", err, id)
+		return err
+	}
+	if result.DeletedCount == 0 {
+		logx.Errorf("NoteRepo|DeleteNote|NotFound|%s", id)
+		return mongo.ErrNoDocuments
+	}
+	return nil
+}
+
+// 查询笔记详情
+func (nr *NoteRepo) GetNote(ctx context.Context, id string) (*model.Note, error) {
+	filter := bson.M{"id": id}
+	var note model.Note
+	if err := nr.mdb.Collection(mongoNoteCollection).FindOne(ctx, filter).Decode(&note); err != nil {
+		logx.Errorf("NoteRepo|GetNote|FindOne|Error|%v|%s", err, id)
+		return nil, err
+	}
+	return &note, nil
+}
+
+// 分页查询笔记
+func (nr *NoteRepo) ListNotes(ctx context.Context, req *model.ListNoteReq) ([]model.Note, int64, error) {
+	filter := bson.M{}
+	if len(req.Owner) > 0 {
+		filter["owner"] = req.Owner
+	}
+
+	total, err := nr.mdb.Collection(mongoNoteCollection).CountDocuments(ctx, filter)
+	if err != nil {
+		logx.Errorf("NoteRepo|ListNote|CountDocuments|Error|%v|%s", err, conv.ToJsonWithoutError(req))
+		return nil, 0, err
+	}
+
+	skip := int64((req.Page - 1) * req.PageSize)
+	limit := int64(req.PageSize)
+	opts := options.Find().SetSkip(skip).SetLimit(limit).SetSort(bson.D{{Key: "create_ts", Value: -1}})
+
+	cursor, err := nr.mdb.Collection(mongoNoteCollection).Find(ctx, filter, opts)
+	if err != nil {
+		logx.Errorf("NoteRepo|ListNote|Find|Error|%v|%s", err, conv.ToJsonWithoutError(req))
+		return nil, 0, err
+	}
+	defer cursor.Close(ctx)
+
+	list := make([]model.Note, 0)
+	if err = cursor.All(ctx, &list); err != nil {
+		logx.Errorf("NoteRepo|ListNote|All|Error|%v|%s", err, conv.ToJsonWithoutError(req))
 		return nil, 0, err
 	}
 

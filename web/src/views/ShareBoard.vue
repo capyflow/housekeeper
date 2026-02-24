@@ -40,8 +40,7 @@
       <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
       </svg>
-      <h3>暂无看板</h3>
-      <p>点击上方"创建看板"按钮开始创建</p>
+      <h3>暂无数据</h3>
     </div>
 
     <div v-else class="boards-grid">
@@ -438,7 +437,32 @@ const copyContent = async () => {
 
   copying.value = true
   try {
-    await navigator.clipboard.writeText(boardToView.value.content)
+    const text = boardToView.value.content ?? ''
+
+    const canUseClipboard =
+      typeof navigator !== 'undefined' &&
+      !!navigator.clipboard &&
+      typeof navigator.clipboard.writeText === 'function' &&
+      window.isSecureContext
+
+    if (canUseClipboard) {
+      await navigator.clipboard.writeText(text)
+    } else {
+      const textarea = document.createElement('textarea')
+      textarea.value = text
+      textarea.setAttribute('readonly', 'true')
+      textarea.style.position = 'fixed'
+      textarea.style.top = '0'
+      textarea.style.left = '-9999px'
+      document.body.appendChild(textarea)
+      textarea.select()
+      textarea.setSelectionRange(0, textarea.value.length)
+      const success = document.execCommand('copy')
+      document.body.removeChild(textarea)
+      if (!success) {
+        throw new Error('document.execCommand(copy) failed')
+      }
+    }
     toast.success('内容已复制到剪贴板')
   } catch (error) {
     console.error('Failed to copy:', error)
@@ -536,40 +560,37 @@ onMounted(() => {
 }
 
 .empty-state {
+  background-color: var(--bg-primary);
+  border-radius: 16px;
+  padding: 48px;
   text-align: center;
-  padding: 80px 20px;
+  border: 1px solid var(--border-color);
 }
 
 .empty-icon {
-  width: 80px;
-  height: 80px;
-  color: var(--text-tertiary);
-  margin: 0 auto 20px;
-  opacity: 0.5;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 16px;
+  color: var(--text-secondary);
 }
 
 .empty-state h3 {
   font-size: 20px;
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 10px;
-}
-
-.empty-state p {
-  color: var(--text-secondary);
-  font-size: 15px;
+  margin: 0;
 }
 
 .boards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
 }
 
 .board-card {
   background-color: var(--bg-primary);
   border-radius: 16px;
-  padding: 24px;
+  padding: 20px;
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--border-color);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -609,7 +630,7 @@ onMounted(() => {
 }
 
 .board-title {
-  font-size: 19px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--text-primary);
   flex: 1;
@@ -657,7 +678,7 @@ onMounted(() => {
 
 .board-content {
   flex: 1;
-  min-height: 90px;
+  min-height: 72px;
   cursor: pointer;
   padding: 4px;
   margin: -4px;
@@ -698,7 +719,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   color: var(--text-secondary);
 }

@@ -22,13 +22,18 @@ const routes: RouteRecordRaw[] = [
         path: 'shareboard',
         name: 'ShareBoard',
         component: () => import('@/views/ShareBoard.vue')
+      },
+      {
+        path: 'notes',
+        name: 'Notes',
+        component: () => import('@/views/Notes.vue')
       }
     ]
   }
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory('/webui'),
   routes
 })
 

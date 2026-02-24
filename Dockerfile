@@ -42,7 +42,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -mod=vendor -a -installsuffix cgo -o house
 # ==========================================
 # 阶段3: 运行时镜像
 # ==========================================
-FROM alpine:latest
+FROM alpine:3.19
 
 WORKDIR /app
 

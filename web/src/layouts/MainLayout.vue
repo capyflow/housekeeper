@@ -19,12 +19,23 @@
           </svg>
           <span>仪表盘</span>
         </router-link>
-        <router-link to="/shareboard" class="nav-item" exact-active-class="active" @click="closeSidebarOnMobile">
+        <button class="nav-item nav-group" :class="{ active: isNotesSection }" type="button" @click="toggleNotesMenu">
           <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
           </svg>
-          <span>共享看板</span>
-        </router-link>
+          <span>笔记</span>
+          <svg class="icon caret" :class="{ open: notesMenuOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        <div v-show="notesMenuOpen" class="nav-submenu">
+          <router-link to="/shareboard" class="nav-subitem" exact-active-class="active" @click="closeSidebarOnMobile">
+            共享看板
+          </router-link>
+          <router-link to="/notes" class="nav-subitem" exact-active-class="active" @click="closeSidebarOnMobile">
+            笔记
+          </router-link>
+        </div>
       </nav>
     </aside>
 
@@ -67,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { useThemeStore } from '@/stores/theme'
@@ -78,11 +89,18 @@ const userStore = useUserStore()
 const themeStore = useThemeStore()
 
 const sidebarOpen = ref(false)
+const notesMenuOpen = ref(false)
+
+const isNotesSection = computed(() => {
+  const name = route.name as string
+  return name === 'ShareBoard' || name === 'Notes'
+})
 
 const currentPageTitle = computed(() => {
   const titleMap: Record<string, string> = {
     Dashboard: '仪表盘',
-    ShareBoard: '共享看板'
+    ShareBoard: '共享看板',
+    Notes: '笔记'
   }
   return titleMap[route.name as string] || '首页'
 })
@@ -94,10 +112,24 @@ const closeSidebarOnMobile = () => {
   }
 }
 
+const toggleNotesMenu = () => {
+  notesMenuOpen.value = !notesMenuOpen.value
+}
+
 const handleLogout = () => {
   userStore.logout()
   router.push('/login')
 }
+
+watch(
+  () => isNotesSection.value,
+  (isActive) => {
+    if (isActive) {
+      notesMenuOpen.value = true
+    }
+  },
+  { immediate: true }
+)
 </script>
 
 <style scoped>
@@ -192,6 +224,48 @@ const handleLogout = () => {
 .nav-item .icon {
   width: 22px;
   height: 22px;
+}
+
+.nav-group {
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+}
+
+.nav-group .caret {
+  margin-left: auto;
+  transition: transform 0.2s ease;
+}
+
+.nav-group .caret.open {
+  transform: rotate(180deg);
+}
+
+.nav-submenu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 4px 0 12px 12px;
+}
+
+.nav-subitem {
+  color: var(--sidebar-text);
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-subitem:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  transform: translateX(4px);
+}
+
+.nav-subitem.active {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: var(--sidebar-active);
 }
 
 .main-content {
