@@ -11,12 +11,14 @@ import (
 
 func PrepareRouter(notesHandler *handler.NotesHandler,
 	recordHandler *handler.RecordHandler,
+	checkInHandler *handler.CheckInHandler,
 	userHandler *handler.UserHandler, staticPath string) *vhttp.VortexHttpRouterGroup {
 	rootGroup := vhttp.NewRootGroup("")
-	// API路由组（/v1前缀）
+	// API 路由组（/v1 前缀）
 	apiGroup := rootGroup.AddGroup("/v1")
 	prepareNotesRouter(apiGroup, notesHandler)
 	prepareRecordRouter(apiGroup, recordHandler)
+	prepareCheckInRouter(apiGroup, checkInHandler)
 	prepareUserRouter(apiGroup, userHandler)
 	prepareStaticRouter(rootGroup, staticPath)
 	return rootGroup
@@ -73,7 +75,7 @@ func prepareNotesRouter(rootGroup *vhttp.VortexHttpRouterGroup,
 	notesGroup.AddRouter([]string{http.MethodPost}, "/note/list", notesHandler.HandlerListNote)       // 获取笔记
 }
 
-// 打卡路由组
+// 打卡路由组（旧版）
 func prepareRecordRouter(rootGroup *vhttp.VortexHttpRouterGroup, recordHandler *handler.RecordHandler) {
 	recordGroup := rootGroup.AddGroup("/record")
 	recordGroup.AddRouter([]string{http.MethodPost}, "/create", recordHandler.HandlerCreateRecord)   // 创建打卡记录
@@ -81,4 +83,16 @@ func prepareRecordRouter(rootGroup *vhttp.VortexHttpRouterGroup, recordHandler *
 	recordGroup.AddRouter([]string{http.MethodDelete}, "/delete", recordHandler.HandlerDeleteRecord) // 删除打卡记录
 	recordGroup.AddRouter([]string{http.MethodPost}, "/info", recordHandler.HandlerRecordInfo)       // 查询打卡记录详情
 	recordGroup.AddRouter([]string{http.MethodPost}, "/list", recordHandler.HandlerListRecord)       // 分页查询打卡记录
+}
+
+// 打卡任务路由组
+func prepareCheckInRouter(rootGroup *vhttp.VortexHttpRouterGroup, checkInHandler *handler.CheckInHandler) {
+	checkInGroup := rootGroup.AddGroup("/checkin")
+	checkInGroup.AddRouter([]string{http.MethodPost}, "/target/create", checkInHandler.HandlerCreateCheckInTarget)      // 创建打卡任务
+	checkInGroup.AddRouter([]string{http.MethodPut}, "/target/update", checkInHandler.HandlerUpdateCheckInTarget)        // 更新打卡任务
+	checkInGroup.AddRouter([]string{http.MethodDelete}, "/target/delete", checkInHandler.HandlerDeleteCheckInTarget)     // 删除打卡任务
+	checkInGroup.AddRouter([]string{http.MethodPost}, "/target/info", checkInHandler.HandlerCheckInTargetInfo)           // 查询打卡任务详情
+	checkInGroup.AddRouter([]string{http.MethodPost}, "/target/list", checkInHandler.HandlerListCheckInTargets)          // 分页查询打卡任务
+	checkInGroup.AddRouter([]string{http.MethodPost}, "/check_in", checkInHandler.HandlerCheckIn)                        // 打卡
+	checkInGroup.AddRouter([]string{http.MethodPost}, "/stats", checkInHandler.HandlerGetCheckInStats)                   // 获取打卡统计
 }

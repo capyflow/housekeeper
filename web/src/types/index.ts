@@ -77,7 +77,7 @@ export interface DeleteNoteReq {
   id: string
 }
 
-// Record types
+// Record types (deprecated, use CheckInTarget instead)
 export interface Record {
   id: string
   title: string
@@ -105,6 +105,70 @@ export interface ListRecordResp {
   total: number
   page: number
   list: Record[]
+}
+
+// CheckIn Target types
+export interface TimeRange {
+  enabled: boolean
+  start: number // minutes from 0-1439
+  end: number   // minutes from 0-1439
+}
+
+export interface CheckInTarget {
+  id: string
+  title: string
+  description: string
+  create_time: number
+  update_time: number
+  owner: string
+  time_range: TimeRange
+  total_days: number
+  check_in_counts: { [key: string]: number } // YYYY-MM-DD -> count
+}
+
+export interface CreateCheckInTargetReq {
+  title: string
+  description: string
+  time_range: TimeRange
+}
+
+export interface UpdateCheckInTargetReq {
+  id: string
+  title: string
+  description: string
+  time_range: TimeRange
+}
+
+export interface DeleteCheckInTargetReq {
+  id: string
+}
+
+export interface CheckInTargetInfoReq {
+  id: string
+}
+
+export interface ListCheckInTargetReq {
+  page: number
+  page_size: number
+  owner?: string
+}
+
+export interface ListCheckInTargetResp {
+  total: number
+  page: number
+  list: CheckInTarget[]
+}
+
+export interface CheckInRequest {
+  id: string
+  target_ts?: number // 0 means current time
+}
+
+export interface CheckInResponse {
+  success: boolean
+  message: string
+  target_id: string
+  check_in_time: number
 }
 
 // User types

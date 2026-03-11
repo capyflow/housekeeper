@@ -29,9 +29,9 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/Notes.vue')
       },
       {
-        path: 'record',
-        name: 'Record',
-        component: () => import('@/views/Record.vue')
+        path: 'checkin-target',
+        name: 'CheckInTarget',
+        component: () => import('@/views/CheckInTarget.vue')
       }
     ]
   }

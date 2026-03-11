@@ -48,26 +48,30 @@ func NewHousekeeper(ctx context.Context, config *conf.Config, staticPath string)
 		// redis 数据索引
 		dbIdxs["note"] = 1
 		dbIdxs["record"] = 2
+		dbIdxs["checkin"] = 3
 
 		// mongo 数据索引
 		dbIdxs["housekeeper"] = "housekeeper"
 	})
 
-	// 初始化dao层
+	// 初始化 dao 层
 	NoteRepo := repository.NewNoteRepo(ctx, dsServer)
 	RecordRepo := repository.NewRecordRepo(ctx, dsServer)
+	CheckInRepo := repository.NewCheckInRepo(ctx, dsServer)
 
 	// 初始化服务层
 	NotesService := services.NewNotesService(ctx, NoteRepo)
 	RecordService := services.NewRecordService(ctx, RecordRepo)
+	CheckInService := services.NewCheckInService(ctx, CheckInRepo)
 	UserService := services.NewUserService(ctx, config)
 
-	// 初始化handler层
+	// 初始化 handler 层
 	NotesHandler := handler.NewNotesHandler(ctx, NotesService)
 	RecordHandler := handler.NewRecordHandler(ctx, RecordService)
+	CheckInHandler := handler.NewCheckInHandler(ctx, CheckInService)
 	UserHandler := handler.NewUserHandler(ctx, UserService)
 
-	routers := router.PrepareRouter(NotesHandler, RecordHandler, UserHandler, staticPath)
+	routers := router.PrepareRouter(NotesHandler, RecordHandler, CheckInHandler, UserHandler, staticPath)
 
 	e := vortex.NewVortexEngine(ctx,
 		vortex.WithPort(int(config.Port)),
